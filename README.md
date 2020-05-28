@@ -2,7 +2,7 @@
 A simple android application that allows a user view exchange rates for any given currency.
 
 ## Screenshots
-<img src="screen-shots/home_screen.png" height="400" alt="Screenshot"/> 
+<img src="screen-shots/ui_suggestion.png" height="400" alt="UI wireframe"/> 
 
 ### Functional Requirements:
 - [ ] Exchange rates must be fetched from: [https://currencylayer.com/documentation](https://currencylayer.com/documentation)  

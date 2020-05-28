@@ -67,9 +67,10 @@ class ExchangeRateDaoTest {
         // GIVEN - live exchange rates is cached
         dao.save(testObject)
         // WHEN - clear cached data
-        dao.clear()
+        val count = dao.clear()
         // THEN - no data in DB
         val exchangeRate = dao.load()
         assertThat(exchangeRate == null, `is`(true))
+        assertThat(count, `is`(1))
     }
 }

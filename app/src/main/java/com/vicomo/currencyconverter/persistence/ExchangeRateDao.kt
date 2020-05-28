@@ -16,5 +16,5 @@ interface ExchangeRateDao {
     fun load(): CurrencyExchangeRate?
 
     @Query("DELETE FROM exchange_rates")
-    fun clear()
+    fun clear(): Int
 }

@@ -5,11 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.vicomo.currencyconverter.models.Currencies
+import com.vicomo.currencyconverter.models.Currency
 import com.vicomo.currencyconverter.models.CurrencyExchangeRate
 
-@Database(entities = [CurrencyExchangeRate::class, Currencies::class], version = 1, exportSchema = false)
-@TypeConverters(value = [ExchangeRatesMapTypeConverter::class, CurrenciesMapTypeConverter::class])
+@Database(entities = [CurrencyExchangeRate::class, Currency::class], version = 1, exportSchema = false)
+@TypeConverters(value = [ExchangeRatesMapTypeConverter::class])
 abstract class AppDatabase: RoomDatabase() {
     abstract fun exchangeRateDao(): ExchangeRateDao
     abstract fun currenciesDao(): CurrenciesDao
