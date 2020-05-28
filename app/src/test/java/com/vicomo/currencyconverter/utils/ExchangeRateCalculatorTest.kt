@@ -9,6 +9,7 @@ import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
 import com.google.common.truth.Truth.assertThat
+import com.vicomo.currencyconverter.models.Currency
 import kotlinx.coroutines.Dispatchers
 import org.junit.Rule
 
@@ -34,6 +35,7 @@ class ExchangeRateCalculatorTest {
             //before testing, round up floating point numbers to one decimal place to avoid precision errors
             it.forEach{ amt -> amt.amount = amt.amount.round (1) }
             expected_10_GBP.forEach { amt -> amt.amount = amt.amount.round (1)}
+            //THEN:
             assertThat(it).containsAnyIn(expected_10_GBP)
             assertThat(it).containsAnyOf(expected_10_GBP[0], expected_10_GBP[2], expected_10_GBP[3])
         }
@@ -41,14 +43,28 @@ class ExchangeRateCalculatorTest {
         calculator.calculate(amt,yen){
             it.forEach{ amt -> amt.amount = amt.amount.round (1) }
             expected_10_JPY.forEach { amt -> amt.amount = amt.amount.round (1)}
+            //THEN:
             assertThat(it).containsAnyIn(expected_10_JPY)
             assertThat(it).containsAnyOf(expected_10_JPY[0], expected_10_JPY[1], expected_10_JPY[2])
         }
         //WHEN: calculate for ¥0
         calculator.calculate(0.0,yen){
             it.forEach { amt ->
+                //THEN:
                 assertThat(amt.amount).isEqualTo(0.0)
             }
+        }
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun calculate_withInvalidCurrency_returnsEmptyList() = runBlockingTest {
+        //GIVEN: calculator with exchange rates in USD
+        val calculator = ExchangeRateCalculator(ratesUSD, cachedCurrencies, Dispatchers.Unconfined)
+        //WHEN: calculate with invalid or new currency not present in the repo
+        calculator.calculate(amt, Currency("XXX", "Invalid Currency")){
+            //THEN: list returned is empty
+            assertThat(it).isEmpty()
         }
     }
 
