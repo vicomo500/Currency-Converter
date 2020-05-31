@@ -1,4 +1,4 @@
-package com.vicomo.currencyconverter.repos
+package com.vicomo.currencyconverter.utils
 
 import java.lang.RuntimeException
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.vicomo.currencyconverter.utils
+package com.vicomo.currencyconverter
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

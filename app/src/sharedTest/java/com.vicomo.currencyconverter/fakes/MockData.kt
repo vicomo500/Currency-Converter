@@ -2,6 +2,7 @@ package com.vicomo.currencyconverter.fakes
 
 import com.vicomo.currencyconverter.models.CurrenciesResp
 import com.vicomo.currencyconverter.models.Currency
+import com.vicomo.currencyconverter.models.CurrencyAmount
 import com.vicomo.currencyconverter.models.CurrencyExchangeRate
 
 val cachedCurrencies = arrayListOf(
@@ -16,10 +17,10 @@ val cachedExchangeRates = CurrencyExchangeRate(
     "111111111",
     "USD",
     mapOf(
-        Pair("USD", 1.0),
-        Pair("GBP", 0.534567),
-        Pair("EUR", 1.917021),
-        Pair("JPY", 101.650385)
+        Pair("USDUSD", 1.0),
+        Pair("USDGBP", 0.534567),
+        Pair("USDEUR", 1.917021),
+        Pair("USDJPY", 101.650385)
     )
 )
 
@@ -28,11 +29,11 @@ val remoteExchangeRates = CurrencyExchangeRate(
     "22222222",
     "USD",
     mapOf(
-        Pair("USD", 1.0),
-        Pair("GBP", 0.821959),
-        Pair("EUR", 0.917011),
-        Pair("JPY", 107.650385),
-        Pair("NGN", 390.503727)
+        Pair("USDUSD", 1.0),
+        Pair("USDGBP", 0.821959),
+        Pair("USDEUR", 0.917011),
+        Pair("USDJPY", 107.650385),
+        Pair("USDNGN", 390.503727)
     )
 )
 
@@ -54,3 +55,9 @@ val remoteCurrencyResp = CurrenciesResp(
 )
 
 const val SERVER_ERROR_MSG = "server error"
+
+val currencyAmountList = listOf(
+    CurrencyAmount(21.0, Currency("JPY", "Japanese Yen")),
+    CurrencyAmount(0.71, Currency("USD", "United States Dollar")),
+    CurrencyAmount(0.36, Currency("GBP", "Pound Sterling"))
+)

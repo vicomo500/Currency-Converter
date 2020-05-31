@@ -8,7 +8,7 @@ import com.vicomo.currencyconverter.fakes.cachedExchangeRates
 import com.vicomo.currencyconverter.fakes.remoteExchangeRates
 import com.vicomo.currencyconverter.models.Currency
 import com.vicomo.currencyconverter.repos.CurrencyRepo
-import com.vicomo.currencyconverter.utils.MainCoroutineRule
+import com.vicomo.currencyconverter.MainCoroutineRule
 import com.vicomo.currencyconverter.utils.Status
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
@@ -50,6 +50,28 @@ class MainActivityViewModelTest {
         assertThat(viewModel.exchangeRates.value!!.message == null ||
                 viewModel.exchangeRates.value!!.message!!.isEmpty()).isEqualTo(true)
     }
+
+    /**
+     * verify loading status
+     * */
+    @ExperimentalCoroutinesApi
+    @Test
+    fun init_verifyLoading() {
+        // Pause dispatcher so we can verify initial values
+        mainCoroutineRule.pauseDispatcher()
+
+        // GIVEN:
+        val viewModel = MainActivityViewModel(repo)
+
+        // THEN:
+        assertThat(viewModel.currencies.value?.status).isEqualTo(Status.LOADING)
+
+        // Execute pending coroutines actions
+        mainCoroutineRule.resumeDispatcher()
+
+        // Then progress indicator is hidden
+        assertThat(viewModel.currencies.value?.status).isEqualTo(Status.SUCCESS)
+    }
     /**
      * verify refreshed data reflected on viewModel
      * */
@@ -77,12 +99,9 @@ class MainActivityViewModelTest {
         val viewModel = MainActivityViewModel(repo)
         //confirm
         assertThat(viewModel.currencies.value!!.data).isEmpty()
-        assertThat(viewModel.exchangeRates.value!!.data).isNull()
         //THEN: verify error status
         assertThat(viewModel.currencies.value!!.status).isEqualTo(Status.ERROR)
         assertThat(viewModel.currencies.value!!.message ).isEqualTo("Server returned empty data")
-        assertThat(viewModel.exchangeRates.value!!.status).isEqualTo(Status.ERROR)
-        assertThat(viewModel.exchangeRates.value!!.message).isEqualTo("Server returned empty data")
     }
 
     /**
@@ -96,10 +115,8 @@ class MainActivityViewModelTest {
         //THEN: verify viewModel handled CurrencyException
         assertThat(viewModel.currencies.value!!.status).isEqualTo(Status.ERROR)
         assertThat(viewModel.currencies.value!!.message ).isEqualTo(FakeCurrencyRepo.ERROR_MSG)
-        assertThat(viewModel.exchangeRates.value!!.status).isEqualTo(Status.ERROR)
-        assertThat(viewModel.exchangeRates.value!!.message).isEqualTo(FakeCurrencyRepo.ERROR_MSG)
         assertThat(viewModel.currencies.value!!.data).isEmpty()
-        assertThat(viewModel.exchangeRates.value!!.data).isNull()
+        assertThat(viewModel.exchangeRates.value?.data).isNull()
     }
 
     /**

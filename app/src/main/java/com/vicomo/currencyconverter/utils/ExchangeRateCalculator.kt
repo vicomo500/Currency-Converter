@@ -3,7 +3,6 @@ package com.vicomo.currencyconverter.utils
 import com.vicomo.currencyconverter.models.Currency
 import com.vicomo.currencyconverter.models.CurrencyAmount
 import com.vicomo.currencyconverter.models.CurrencyExchangeRate
-import com.vicomo.currencyconverter.repos.CurrencyException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -21,7 +20,8 @@ class ExchangeRateCalculator (
                 val sourceAmt = convertToSourceAmt(amt, currency)
                 val list = arrayListOf<CurrencyAmount>()
                 for (entry: Map.Entry<String, Double> in exchangeRates.quotes){
-                    val entryCurrency = findCurrency(entry.key) ?: continue
+                    val key = entry.key.substring(3)
+                    val entryCurrency = findCurrency(key) ?: continue
                     list.add(CurrencyAmount( sourceAmt * entry.value, entryCurrency ))
                 }
                 callback.invoke(list)
@@ -31,8 +31,10 @@ class ExchangeRateCalculator (
     }
 
     private fun convertToSourceAmt(amt: Double, currency: Currency): Double{
+        val key = "${exchangeRates.source}${currency.code}"//concatenate source currency to key
         // 1 source currency = this currency's rate
-        val rate = exchangeRates.quotes[currency.code] ?: kotlin.run { throw CurrencyException("currency does not exist") }
+        val rate = exchangeRates.quotes[key] ?:
+        kotlin.run { throw CurrencyException("currency does not exist") }
         // x source currency = ?
         return amt / rate
     }

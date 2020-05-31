@@ -1,24 +1,32 @@
 package com.vicomo.currencyconverter.views
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import android.widget.BaseAdapter
+import android.widget.SpinnerAdapter
+import android.widget.TextView
+import com.vicomo.currencyconverter.R
+import com.vicomo.currencyconverter.models.Currency
 
-class CurrencyAdapter : RecyclerView.Adapter<CurrencyAdapter.ViewHolder>() {
+class CurrencyAdapter(
+    private val context: Context,
+    private val list: ArrayList<Currency>
+): BaseAdapter(), SpinnerAdapter {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        TODO("Not yet implemented")
+    @SuppressLint("ViewHolder")
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+      val view = View.inflate(context, android.R.layout.simple_spinner_item, null)
+        val textView = view.findViewById<TextView>(android.R.id.text1)
+        textView.text = "${list[position].code} : ${list[position].name}"
+        return view
     }
 
-    override fun getItemCount(): Int {
-        TODO("Not yet implemented")
-    }
+    override fun getItem(position: Int): Any = list[position]
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        TODO("Not yet implemented")
-    }
+    override fun getItemId(position: Int): Long =
+        if (list[position].id < 1) position.toLong() else  list[position].id
 
-    inner class ViewHolder(view: View):
-        RecyclerView.ViewHolder(view) {
-    }
+    override fun getCount(): Int = list.size
 }

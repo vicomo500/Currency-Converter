@@ -54,6 +54,7 @@ abstract class RepoModule {
         fun provideCurrenciesDao(context: Context) = AppDatabase.getInstance(context).currenciesDao()
     }
 
+    @Singleton
     @Binds
     abstract fun bindWeatherRepo(repoImpl: CurrencyRepoImpl): CurrencyRepo
 

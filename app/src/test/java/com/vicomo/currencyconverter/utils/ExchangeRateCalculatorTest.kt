@@ -9,6 +9,7 @@ import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
 import com.google.common.truth.Truth.assertThat
+import com.vicomo.currencyconverter.MainCoroutineRule
 import com.vicomo.currencyconverter.models.Currency
 import kotlinx.coroutines.Dispatchers
 import org.junit.Rule
@@ -16,7 +17,8 @@ import org.junit.Rule
 class ExchangeRateCalculatorTest {
     @ExperimentalCoroutinesApi
     @get:Rule
-    var mainCoroutineRule = MainCoroutineRule()
+    var mainCoroutineRule =
+        MainCoroutineRule()
     private lateinit var  ratesUSD : CurrencyExchangeRate
     private lateinit var  ratesJPY : CurrencyExchangeRate
     private lateinit var  expected_10_GBP : List<CurrencyAmount>
@@ -75,10 +77,10 @@ class ExchangeRateCalculatorTest {
             "111111111",
             "USD",
             mapOf(
-                Pair("USD", 1.0),
-                Pair("GBP", 0.82),
-                Pair("EUR", 0.91),
-                Pair("JPY", 107.77)
+                Pair("USDUSD", 1.0),
+                Pair("USDGBP", 0.82),
+                Pair("USDEUR", 0.91),
+                Pair("USDJPY", 107.77)
             )
         )
         ratesJPY = CurrencyExchangeRate(
@@ -86,10 +88,10 @@ class ExchangeRateCalculatorTest {
             "111111111",
             "JPY",
             mapOf(
-                Pair("USD", 0.0093),
-                Pair("GBP", 0.0076),
-                Pair("EUR", 0.0084),
-                Pair("JPY", 1.0)
+                Pair("JPYUSD", 0.0093),
+                Pair("JPYGBP", 0.0076),
+                Pair("JPYEUR", 0.0084),
+                Pair("JPYJPY", 1.0)
             )
         )
         expected_10_GBP = listOf(

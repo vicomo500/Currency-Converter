@@ -6,6 +6,7 @@ import com.vicomo.currencyconverter.models.CurrencyExchangeRate
 import com.vicomo.currencyconverter.persistence.CurrenciesDao
 import com.vicomo.currencyconverter.persistence.ExchangeRateDao
 import com.vicomo.currencyconverter.remote.WebService
+import com.vicomo.currencyconverter.utils.CurrencyException
 import com.vicomo.currencyconverter.utils.convertCurrencyMapToList
 import kotlinx.coroutines.*
 import retrofit2.Call
@@ -57,23 +58,6 @@ class CurrencyRepoImpl
         refreshCallback = callback
     }
 
-/*   fun initExchangeRates(forceRemote: Boolean, () -> ) {
-        GlobalScope.launch(dispatcher) {
-            try{
-                if(forceRemote)
-                    exchangeRates.value = Data.success(loadRemoteExchangeRates())
-                else {
-                    val data = loadCachedExchangeRates() ?: loadRemoteExchangeRates()
-                    exchangeRates.value = if(data != null) Data.success(data)  else Data.error(
-                }
-            }catch (ex: Exception){
-                val msg = ex.message ?: "An error occurred while loading exchange rates"
-                exchangeRates.value = Data.error(exchangeRates.value?.data, msg)
-            }
-        }
-    }*/
-
-
     suspend fun loadCachedExchangeRates(): CurrencyExchangeRate? =
         withContext(dispatcher){
             exchangeRateDao.load()
@@ -82,7 +66,7 @@ class CurrencyRepoImpl
     suspend fun loadRemoteExchangeRates( callback: ((CurrencyExchangeRate?) -> Unit)?){
         webService.getExchangeRates().enqueue(object : Callback<CurrencyExchangeRate?> {
             override fun onFailure(call: Call<CurrencyExchangeRate?>, t: Throwable) {
-                throw CurrencyException(t.message)
+                //throw CurrencyException(t.message) //quick fix, causes app to crash in ExchangeRatesWorker --> realised late
             }
 
             override fun onResponse(
@@ -98,21 +82,13 @@ class CurrencyRepoImpl
             }
         })
     }
-//    suspend fun loadRemoteExchangeRates(): CurrencyExchangeRate? =
-//        withContext(dispatcher){
-//            try{
-//                val remote = webService.getExchangeRates().execute().body()
-//                remote?.let { cacheExchangeRates(it) }
-//                remote
-//            }catch (ex: Exception){
-//                throw CurrencyException(ex.message)
-//            }
-//        }
 
     private suspend fun cacheExchangeRates(data: CurrencyExchangeRate) {
         withContext(dispatcher){
-            exchangeRateDao.clear()
-            exchangeRateDao.save(data)
+            try{
+                exchangeRateDao.clear()
+                exchangeRateDao.save(data)
+            }catch (ex: java.lang.Exception){ex.printStackTrace()}
         }
     }
 
@@ -135,8 +111,10 @@ class CurrencyRepoImpl
 
     private suspend fun cacheCurrencies(currencies: List<Currency>) {
         withContext(dispatcher){
-            currenciesDao.clear()
-            currenciesDao.save(currencies)
+            try{
+                currenciesDao.clear()
+                currenciesDao.save(currencies)
+            }catch (ex: java.lang.Exception){ex.printStackTrace()}
         }
     }
 

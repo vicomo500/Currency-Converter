@@ -2,8 +2,9 @@ package com.vicomo.currencyconverter.fakes
 
 import com.vicomo.currencyconverter.models.Currency
 import com.vicomo.currencyconverter.models.CurrencyExchangeRate
-import com.vicomo.currencyconverter.repos.CurrencyException
+import com.vicomo.currencyconverter.utils.CurrencyException
 import com.vicomo.currencyconverter.repos.CurrencyRepo
+import javax.inject.Inject
 
 class FakeCurrencyRepo(
     var currencies: List<Currency>?,
@@ -12,6 +13,8 @@ class FakeCurrencyRepo(
     var refreshCallback: ((CurrencyExchangeRate?) -> Unit)? = null,
     var shouldThrowError: Boolean = false
 ): CurrencyRepo {
+
+    @Inject constructor(): this(null, null, null)
 
     override suspend fun loadCurrencies(forceRemote: Boolean): List<Currency>  {
         if(shouldThrowError)

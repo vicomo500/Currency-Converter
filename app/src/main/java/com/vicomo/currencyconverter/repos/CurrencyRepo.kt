@@ -2,6 +2,7 @@ package com.vicomo.currencyconverter.repos
 
 import com.vicomo.currencyconverter.models.Currency
 import com.vicomo.currencyconverter.models.CurrencyExchangeRate
+import com.vicomo.currencyconverter.utils.CurrencyException
 
 interface CurrencyRepo {
     /*synchronous method*/
